@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+
+        function CrearCatalogo (){
+            this.listado =[];
+            this.name = name;
+            
+            this.agregarCancion=function(nombre,genero,tiempo){
+                if (typeof tiempo==='number'){
+                    this.listado.push([nombre.toLowerCase(),genero.toLowerCase(),tiempo])
+                }
+                else{
+                    console.log('El tiempo debe ser introducido con decimales: ejempl:3.45=> 3 minutos y 45 segundos')
+                }
+
+            }
+            this.listarCancion = function () {
+                
+                for (i=0;i<this.listado.length;i++){
+                   console.log(`Nombre: ${this.listado[i][0]},   Genero: ${this.listado[i][1]},   Tiempo: ${this.listado[i][2]}`)
+                }
+            
+            }
+
+            this.buscarGeneros = function(generoUser){
+                let listadoGeneros=[]
+                let noHay=false;
+                let genero= generoUser.toLowerCase()
+
+                if (this.listado.lenght===0){
+                    console.log('El album no tiene canciones')
+                }
+
+                else{
+                
+                    for (i=0;i<this.listado.length;i++){
+
+                        let buscado = this.listado[i][1];
+                        
+                        if (buscado===genero){
+                            noHay=true
+                            listadoGeneros.push(this.listado[i][0])
+                        }
+                
+                    }
+                
+                }
+
+                if(noHay===false){console.log('No hay canciones del genero '+genero)}
+                else{
+                console.log(listadoGeneros)}
+
+            }
+            this.calcularPromedioDuracion=function(){
+                let totalMinutosCanciones=0;
+                let canciones=0
+                
+                for (i=0;i<this.listado.length;i++){
+                    canciones+=1
+                    let minutos= Math.floor(this.listado[i][2])*60
+                    let segundos= (this.listado[i][2]%1)+minutos
+                    
+                    totalMinutosCanciones=totalMinutosCanciones+(segundos/60)
+                
+                }
+
+                console.log(`Tienes ${canciones}, con total de ${totalMinutosCanciones} minutos y el tiempo medio por canción es: ${totalMinutosCanciones/canciones}`)
+
+            }
+
+
+        }
+
+
+
+
+        
+        let miMusica90 =new CrearCatalogo();
+
+        miMusica90.agregarCancion('hola','rOck',20)
+
+        console.log(miMusica90.listado)
+
+        console.log('una cancion')
+        miMusica90.listarCancion()
+
+
+        miMusica90.agregarCancion('adios','pop',40)
+        miMusica90.agregarCancion('t','rock',90)
+
+        console.log('tres canciones agregadas')
+        miMusica90.listarCancion()
+        console.log('buscar genero')
+
+        miMusica90.buscarGeneros('Rock')
+        miMusica90.agregarCancion('thunder','rock',89)
+        miMusica90.buscarGeneros('Pop')
+        miMusica90.calcularPromedioDuracion()
+        console.log('vuelve a listar')
+        miMusica90.listarCancion()
+        
+        
+    </script>
+</body>
+</html>

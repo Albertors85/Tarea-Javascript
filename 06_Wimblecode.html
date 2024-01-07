@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+          function createMatch(jugador1,jugador2){
+            this.jugador1=jugador1;
+            this.jugador2=jugador2;
+            this.puntosPartidos=[0,15,30,40,45];
+            this.score1=0;
+            this.score2=0;
+            this.fase=undefined;
+            this.rondasJugador1=0;
+            this.rondasJugador2=0
+            this.winnrer='';
+        
+
+            this.pointWonBy = function(numero){
+
+            
+                if(this.score1==3 && this.score2==3){
+                    this.score1=2;
+                    this.score2=2;
+                    
+                    if(numero==1){
+                        this.score1+=1
+                        this.fase= true
+                        }
+                    else if(numero==2){
+                        this.score2+=1
+                        this.fase= false
+                            
+                    }
+
+                    }
+                    else{
+
+                    if(numero==1){this.score1+=1}
+                    else if(numero===2){this.score2+=1}
+
+                    }
+                
+                
+                
+                if (this.score1==3 && this.score2==3){
+                    this.fase= 0
+                }
+                else if (this.score1==4){
+                    this.rondasJugador1+=1;
+                    this.score1=0;
+                    this.fase=null
+                    
+                }
+                else if (this.score2==4){
+                    this.rondasJugador2+=1;
+                    this.score2=0;
+                    this.fase=null
+                    
+                }
+
+
+            }
+
+
+            this.getCurrentRoundScore = function(){
+                let puntos;
+                
+                if (this.fase==0){
+                    puntos= "Deuce"
+                }
+                else if (this.fase==true){
+                    puntos= `Ventaja para ${this.jugador1}`
+                }
+                else if (this.fase==false){
+                    puntos= `Ventaja para ${this.jugador2}`
+                }
+
+                else{
+                    puntos=`${this.jugador1} ${this.puntosPartidos[this.score1]} ${this.puntosPartidos[this.score2]} ${this.jugador2}`
+                    
+                }
+                return puntos
+            }
+
+            this.getMatchScore = function(){
+
+                return `${this.jugador1} ${this.rondasJugador1} ${this.rondasJugador2} ${this.jugador2}`
+
+
+            }
+            this.getWinner = function (){
+                let totalRondas=this.rondasJugador1+this.rondasJugador2;
+                
+                if ((this.rondasJugador1-1)>this.rondasJugador2 && totalRondas>=4){
+                    this.winnrer=this.jugador1
+                }
+                else if ((this.rondasJugador2-1)>this.rondasJugador1 && totalRondas>=4){
+                    this.winnrer=this.jugador2
+                }
+
+
+                else{
+                    this.winnrer=null
+                }
+                return this.winnrer
+            }
+        }
+
+
+        const game = new createMatch('alberto','natalia');
+        console.log(game)
+        console.log(game.score1)
+        console.log(game.getCurrentRoundScore())
+        game.pointWonBy(1)
+        game.pointWonBy(1)
+        console.log(game.getCurrentRoundScore())
+        game.pointWonBy(1)
+        game.pointWonBy(1)
+        console.log(game.getCurrentRoundScore())
+        game.pointWonBy(2)
+        console.log('ha terminado')
+        console.log(game.getMatchScore())
+        console.log(game.getCurrentRoundScore())
+        game.pointWonBy(2)
+        game.pointWonBy(2)
+        game.pointWonBy(2)
+        game.pointWonBy(2)
+        game.pointWonBy(2)
+        console.log(game.getMatchScore())
+        console.log(game.getCurrentRoundScore())
+        game.pointWonBy(2)
+        game.pointWonBy(2)
+        console.log(game.getMatchScore())
+        console.log(game.getCurrentRoundScore())
+        console.log(game.getWinner())
+        game.pointWonBy(2)
+        game.pointWonBy(2)
+        game.pointWonBy(2)
+        
+        console.log(game.getCurrentRoundScore())
+        console.log(game.getMatchScore())
+        console.log(game.getWinner())
+        console.log('Natalia lleva 2 alberto 1')
+        game.pointWonBy(1)
+        game.pointWonBy(1)
+        game.pointWonBy(1)
+        console.log(game.getCurrentRoundScore())
+        game.pointWonBy(1)
+        console.log(game.getCurrentRoundScore())
+        game.pointWonBy(1)
+        console.log(game.getMatchScore())
+        game.pointWonBy(2)
+        game.pointWonBy(2)
+        game.pointWonBy(2)
+        game.pointWonBy(2)
+        console.log(game.getWinner())
+        game.pointWonBy(2)
+        game.pointWonBy(2)
+        game.pointWonBy(2)
+        game.pointWonBy(2)
+        console.log(game.getWinner())
+
+    </script>
+</body>
+</html>
