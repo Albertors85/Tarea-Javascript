@@ -8,141 +8,217 @@
   <body>
     <script>
       function createMatch(jugador1, jugador2) {
-        this.jugador1 = jugador1;
-        this.jugador2 = jugador2;
+        this.jugador1 = {
+          name: jugador1,
+          rondas: 0,
+          juegos: 0,
+        };
+        this.jugador2 = {
+          name: jugador2,
+          juegos: 0,
+          rondas: 0,
+        };
         this.puntosPartidos = [0, 15, 30, 40, 45];
         this.score1 = 0;
         this.score2 = 0;
         this.fase = undefined;
-        this.rondasJugador1 = 0;
-        this.rondasJugador2 = 0;
-        this.winnrer = "";
+
+        this.finalWinner = "";
 
         this.pointWonBy = function (numero) {
-          if (this.score1 == 3 && this.score2 == 3) {
+          if (this.score1 === 3 && this.score2 === 3) {
             this.score1 = 2;
             this.score2 = 2;
 
-            if (numero == 1) {
+            if (numero === 1) {
               this.score1 += 1;
               this.fase = true;
-            } else if (numero == 2) {
+            } else if (numero === 2) {
               this.score2 += 1;
               this.fase = false;
             }
           } else {
-            if (numero == 1) {
+            if (numero === 1) {
               this.score1 += 1;
             } else if (numero === 2) {
               this.score2 += 1;
             }
           }
 
-          if (this.score1 == 3 && this.score2 == 3) {
-            this.fase = 0;
-          } else if (this.score1 == 4) {
-            this.rondasJugador1 += 1;
+          if (this.score1 === 3 && this.score2 === 3) {
+            this.fase = null;
+          }
+
+          if (this.score1 === 4) {
+            this.jugador1.rondas += 1;
             this.score1 = 0;
-            this.fase = null;
-          } else if (this.score2 == 4) {
-            this.rondasJugador2 += 1;
             this.score2 = 0;
-            this.fase = null;
+            this.fase = undefined;
+
+            if (
+              this.jugador1.rondas >= 4 &&
+              this.jugador1.rondas >= this.jugador2.rondas + 2
+            ) {
+              this.jugador1.juegos += 1;
+              this.jugador1.rondas = 0;
+              this.jugador2.rondas = 0;
+            }
+          } else if (this.score2 === 4) {
+            this.jugador2.rondas += 1;
+            this.score1 = 0;
+            this.score2 = 0;
+            this.fase = undefined;
+
+            if (
+              this.jugador2.rondas >= 4 &&
+              this.jugador2.rondas >= this.jugador1.rondas + 2
+            ) {
+              this.jugador2.juegos += 1;
+              this.jugador2.rondas = 0;
+              this.jugador1.rondas = 0;
+            }
+          }
+
+          let totalRondas = this.jugador1.rondas + this.jugador2.rondas;
+          if (totalRondas >= 4 && totalRondas < 7) {
+            if (this.jugador1.rondas >= this.jugador2.rondas + 2) {
+              this.jugador1.juegos += 1;
+              this.jugador1.rondas = 0;
+              this.jugador2.rondas = 0;
+            } else if (this.jugador2.rondas >= this.jugador1.rondas + 2) {
+              this.jugador2.juegos += 1;
+              this.jugador2.rondas = 0;
+              this.jugador1.rondas = 0;
+            }
+          } else if (totalRondas === 7) {
+            if (this.jugador1.rondas > this.jugador2.rondas) {
+              this.jugador1.juegos += 1;
+              this.jugador1.rondas = 0;
+              this.jugador2.rondas = 0;
+            } else {
+              this.jugador2.juegos += 1;
+              this.jugador2.rondas = 0;
+              this.jugador1.rondas = 0;
+            }
+          }
+
+          if (this.jugador1.juegos === 2) {
+            this.finalWinner = ` ${this.jugador1.name}`;
+          } else if (this.jugador2.juegos === 2) {
+            this.finalWinner = ` ${this.jugador2.name}`;
           }
         };
 
         this.getCurrentRoundScore = function () {
           let puntos;
 
-          if (this.fase == 0) {
+          if (this.fase === null) {
             puntos = "Deuce";
           } else if (this.fase == true) {
-            puntos = `Ventaja para ${this.jugador1}`;
+            puntos = `Ventaja para ${this.jugador1.name}`;
           } else if (this.fase == false) {
-            puntos = `Ventaja para ${this.jugador2}`;
+            puntos = `Ventaja para ${this.jugador2.name}`;
           } else {
-            puntos = `${this.jugador1} ${this.puntosPartidos[this.score1]} ${
-              this.puntosPartidos[this.score2]
-            } ${this.jugador2}`;
+            puntos = `Puntos ${this.jugador1.name} ${
+              this.puntosPartidos[this.score1]
+            } ${this.puntosPartidos[this.score2]} ${this.jugador2.name}`;
           }
+
           return puntos;
+        }; 
+
+        this.getRoundsScore = function () {
+          return `Rondas: ${this.jugador1.name} ${this.jugador1.rondas} ${this.jugador2.rondas} ${this.jugador2.name}`;
         };
 
         this.getMatchScore = function () {
-          return `${this.jugador1} ${this.rondasJugador1} ${this.rondasJugador2} ${this.jugador2}`;
+          return `${this.jugador1.name} ha ganado ${this.jugador1.juegos} juegos y ${this.jugador2.name} ha ganado ${this.jugador2.juegos} juegos`;
         };
-        this.getWinner = function () {
-          let totalRondas = this.rondasJugador1 + this.rondasJugador2;
 
-          if (
-            this.rondasJugador1 - 1 > this.rondasJugador2 &&
-            totalRondas >= 4
-          ) {
-            this.winnrer = this.jugador1;
-          } else if (
-            this.rondasJugador2 - 1 > this.rondasJugador1 &&
-            totalRondas >= 4
-          ) {
-            this.winnrer = this.jugador2;
+        this.getWinner = function () {
+          console.log(this.finalWinner);
+          if (this.finalWinner === "") {
+            return "No hay ganador decidido";
           } else {
-            this.winnrer = null;
+            return `El ganador es  del partido de tennis y que pasa a la siguiente ronda es${this.finalWinner}`;
           }
-          return this.winnrer;
         };
       }
 
-      const game = new createMatch("alberto", "natalia");
-      console.log(game);
-      console.log(game.score1);
-      console.log(game.getCurrentRoundScore());
+      // Ejemplo de software
+      const game = new createMatch("Alberto C", "David J");
+      // Cuando puntua el 1o judagor se registra de este modo
       game.pointWonBy(1);
+      // Cuando puntua el 2o judagor se registra de este modo
+      game.pointWonBy(2);
+      // Quiero poder ver como va la ronda actual en todo momento
+      console.log(game.getCurrentRoundScore()); // Alberto C 15-15 David J
       game.pointWonBy(1);
-      console.log(game.getCurrentRoundScore());
+      console.log(game.getCurrentRoundScore()); // Alberto C 30-15 David J
+      game.pointWonBy(2);
+      console.log(game.getCurrentRoundScore()); // Alberto C 30-30 David J
       game.pointWonBy(1);
+      console.log(game.getCurrentRoundScore()); // Alberto C 40-30 David J
+      game.pointWonBy(2);
+      console.log(game.getCurrentRoundScore()); // Deuce
+      // jugador 1 toma ventaja
       game.pointWonBy(1);
-      console.log(game.getCurrentRoundScore());
+      console.log(game.getCurrentRoundScore()); // Advantage Alberto C
+      // jugador 2 empata
       game.pointWonBy(2);
-      console.log("ha terminado");
-      console.log(game.getMatchScore());
-      console.log(game.getCurrentRoundScore());
+      console.log(game.getCurrentRoundScore()); // Deuce
+      // jugador 2 toma ventaja
       game.pointWonBy(2);
+      console.log(game.getCurrentRoundScore()); // Advantage David J
+      // Con este punto jugador 2 gana la ronda
       game.pointWonBy(2);
-      game.pointWonBy(2);
-      game.pointWonBy(2);
-      game.pointWonBy(2);
-      console.log(game.getMatchScore());
-      console.log(game.getCurrentRoundScore());
-      game.pointWonBy(2);
-      game.pointWonBy(2);
-      console.log(game.getMatchScore());
-      console.log(game.getCurrentRoundScore());
-      console.log(game.getWinner());
-      game.pointWonBy(2);
-      game.pointWonBy(2);
-      game.pointWonBy(2);
+      // Quiero poder ver como va la puntuación de un juego
+      console.log(game.getRoundsScore()); //  Alberto C 0 David J 1
+      // La primera ronda es para David le quedan 3 para ganar un juego
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      // David gana 2o ronda
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      // David gana 3o ronda
+      game.pointWonBy(2); // Player  2 wins the game
+      game.pointWonBy(2); // Player  2 wins the game
+      game.pointWonBy(2); // Player  2 wins the game
+      game.pointWonBy(2); // Player  2 wins the game
+      // David gana 4o ronda
+      // Primer juego ganado
+      console.log(game.getMatchScore()); // Alberto C 0 David J 1
 
-      console.log(game.getCurrentRoundScore());
-      console.log(game.getMatchScore());
-      console.log(game.getWinner());
-      console.log("Natalia lleva 2 alberto 1");
-      game.pointWonBy(1);
-      game.pointWonBy(1);
-      game.pointWonBy(1);
-      console.log(game.getCurrentRoundScore());
-      game.pointWonBy(1);
-      console.log(game.getCurrentRoundScore());
-      game.pointWonBy(1);
-      console.log(game.getMatchScore());
-      game.pointWonBy(2);
-      game.pointWonBy(2);
-      game.pointWonBy(2);
-      game.pointWonBy(2);
-      console.log(game.getWinner());
-      game.pointWonBy(2);
-      game.pointWonBy(2);
-      game.pointWonBy(2);
-      game.pointWonBy(2);
-      console.log(game.getWinner());
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      // gana ronda 1o
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      // gana ronda 2o
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      // gana ronda 3o
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      game.pointWonBy(2); // Jugador 2 anota un punto
+      // gana ronda 4o
+      // Método para ver los juegos de cada jugador
+
+      // Método para ver los juegos de cada jugador
+      console.log(game.getMatchScore()); //  Alberto C 0\nDavid J 2
+      // método para ver el ganador. Si aún no hay ganador retornar null
+      console.log(game.getWinner()); // Output: "David J"
     </script>
   </body>
 </html>
