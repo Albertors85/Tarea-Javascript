@@ -23,7 +23,7 @@ function AlumnoKeep(nombre, apellido, edad, busqueda, bootcamp) {
     react: [2024, 12, 24],
   };
 
-  this.getFechas = function (curso) {
+  this.getFechas = function (encuentraCurso) {
     let fechaInicio;
 
     for (curso in this.bootcamp) {
@@ -60,3 +60,5 @@ console.log(alberto);
 console.log(alberto.bootcamp);
 console.log(alberto.getFechas("react"));
 console.log(alberto.metodo());
+
+
